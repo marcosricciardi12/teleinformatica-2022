@@ -90,11 +90,13 @@ def myNetwork(n):
         net.get(name_sWAN[i]).start([])
 
     info( '*** Post configure switches and hosts\n')
+    ult_address_ut = 6
     prim_address_ut = 1
     desplazamiento = 0
     incremento = 8
     for i in range (n):
         net['r_central'].cmd('ip route add 10.0.' + str(i+1) + '.0/24 via 192.168.100.' + str(prim_address_ut + desplazamiento))
+        net[nameH[i]].cmd('ip route add 192.168.100.' + str(ult_address_ut + desplazamiento) + ' via 10.0.' + str(i+1) + '.1')
         desplazamiento = desplazamiento + incremento
 
     CLI(net)
