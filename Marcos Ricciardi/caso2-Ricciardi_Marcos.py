@@ -94,9 +94,20 @@ def myNetwork(n):
     prim_address_ut = 1
     desplazamiento = 0
     incremento = 8
+    
+
     for i in range (n):
         net['r_central'].cmd('ip route add 10.0.' + str(i+1) + '.0/24 via 192.168.100.' + str(prim_address_ut + desplazamiento))
         net[nameH[i]].cmd('ip route add 192.168.100.' + str(ult_address_ut + desplazamiento) + ' via 10.0.' + str(i+1) + '.1')
+        net[nameR[i]].cmd('ip route add 192.168.100.0/25 via 192.168.100.' + str(ult_address_ut + desplazamiento))
+        desplazamiento2 = 0
+        for j in range(n):
+            if j!=i:
+                net[nameR[i]].cmd('ip route add 10.0.' + str(j+1) + '.0/24 via 192.168.100.' + str(ult_address_ut + desplazamiento))
+                net[nameH[i]].cmd('ip route add 192.168.100.' + str(ult_address_ut + desplazamiento2) + ' via 10.0.' + str(i+1) + '.1')
+                net[nameH[i]].cmd('ip route add 192.168.100.' + str(prim_address_ut + desplazamiento2) + ' via 10.0.' + str(i+1) + '.1')
+                net[nameH[i]].cmd('ip route add 10.0.' + str(j+1) + '.0/24 via 10.0.' + str(i+1) + '.1')
+            desplazamiento2 = desplazamiento2 + incremento
         desplazamiento = desplazamiento + incremento
 
     CLI(net)

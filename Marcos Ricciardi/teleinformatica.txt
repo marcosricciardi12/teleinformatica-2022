@@ -1,0 +1,182 @@
+Direccionamiento IP. Enrutamiento
+Como el router se encarga de encaminar los datagramas al destino??
+Diseño del algoritmo de ruteo en IP?¿
+	Como deberia ser un algoritmo que resuelva esta problema de ruteo
+
+El ruteo es un problema del destino.
+El datagrama tiene una direccion destino y una drieccion origen.
+Lo primero que tiene un algoritmo. El stack ip corre en un dispositivo. Ya sea mi host o un sistema intermediario como un router debe tomar decisiones de ruteo para encaminar el datagrama al destino.
+Datos:
+	IP destino: 192.168.100.20
+	configuracion
+	IP oirgen: 192.168.2.64/24
+	
+	De entrada no forman parte de la misma red
+	Mi host lo primero que decide que el destino no es parte de la red
+	Si no es vecino, se lo da al gateway. Es una decision del algoritmo
+	/32 le especifico al destino FINAL
+	A que capa le doy lo que necesita que manda? a la capa de enlace que maneja tramas, no datagramas.
+Donde estoy? a donde quiero ir?? Destino CIDR
+La info en las tablas de ruteo garantiza o no el exito del routing
+El algoritmo es "simple" Hay que escribir bien las tablas de ruteo
+Las entradas de la tabla de ruteo describe destinos
+La entrada 0.0.0.0/0 deberia estar al final de la tabla
+El algoritmo deberia ordenar la tabla
+La t de ruteo se escribe poco y se lee mucho
+El sort conviene hacerlo cuando se escribe o se modifica
+El costo que lo pague quien escribe la tablade ruteo , no cada vez que corre el algoritmo
+Aprender a rutear: que las tablas contengan la info para que la red cumpla el funcionamiento deseado.
+
+X cada Router:
+donde estoy?
+A donde quiero ir? Destino CIDR
+Quien me puede llevar? [Vecino]
+
+Los router siempre deciden con la info que tienen en la tabla de ruteo
+Yo puedo automatizar como llega la info a la tabla de ruteo
+
+El ruteo es siempre el mismo. Lo que es dinamico es la tabla, es decir su configuracion.
+El algoritmo de ruteo es siempre el mismo
+Puedo sofisticar la info que llega las tablas de ruteo
+LAS TABLAS DE RUTEO. Despues veo como hago si tengo una red estatica, la administro para que no cambie. Si quiero cambios, veo como hago para que los cambios actualicen las tablas de ruteo.
+
+Como funciona LA internet??
+	Los rirs no solo administran ip si no Los ASN: Agrupacion de direcciones, con el ASN mi router puede hablar con otros ASN 
+	Procolo BGP: Intercambian INFORMACION de ruteo. Los ASN propagan la red de prefijos.
+	Con BGP se le puede informar a los routers a donde quiero ir
+	LA internet pasa a ser un Sistema autonomo. Tengo que tener capacidad de administrar mi sistema autonomo.
+	Intercambio de rutas. Los ASN agregan prefijos. la red actualiza las tablas de ruteo de forma dinamica. En seg anuncio mis prefijos y el trafica empieza a moverse por ahi. LACNIC me da un ASN y un rango de IPs. Te asignan prefijos de internet.
+	Silica networks.
+	Te dan un enlace y tenes que configurar tu sistema autonomo. Una vez hecho ya se puede salir.
+	zebra: nombre del demonio bgp y va actualizando las tablas de ruteo.
+	Yo decido informarle al mundo donde me encuentro.
+	Hurricane Electric
+	Internet funciona atraves de la agregacion de redes de AS a los cuales yo vinculo mis AS con enlaces con lo cuales yo intercambio rutas.
+	ip -6
+
+
+TTL MIN 1: El prox router es el destino o un host final
+TTL 0: Dropea el paquete, la cantidad de saltos o hops es la nafta que le damos a un datagrama.
+
+Como expresamos el comportamiento de datos
+Como hace para soportar IP para fragmentar:
+Pueden escribir datagramas que no entran en el paquete de la capa de enlace, le resuelve un problema a la capa de enlace,
+Max cant de IP 64K
+El protocolo IP tiene que hacer entrar la info en el MTU (1500aprox) de la capa de enlace
+payload IP max: 64k
+IP convierte el mensaje para enviarlo en varios
+Cada fragmento tambien tendra datos de cabecera
+Tamaño de cabecera:20b
+ En UDP no hay un orden de entrega, no hay garantia de como se entrega. El problema empieza y termina en un datagrama
+Los fragmentos viajan desordenados al origen. 
+El host como lo rearma?
+Solo el primer fragmento tiene info de red y transporte, los demas solo de red
+Los fragmentos se van almacenando en un buffer, y el host tiene que esperar a que lleguen para unirlos y pasarselos a la capa de transporte, cuanto espero??
+Un tiempo fijo determinado por las RFC, el problema de este tiempo es el buffer que se puede desbordar
+Exito: Rearmar el datagrama
+IPV6 no tiene fragmentacion en sus campos
+La idea es ver como la evitamos
+El fragment offset esta multiplicado *8.
+Flags: DF MF(indica si hay mas fragmentos)
+DF: No me fragmentes. Es un campo imperativo para la red
+El router que no puede fragmentar, envia en ICPM al router de origen el MTU que soporta el destino
+PMTU, es el mtu minimo de todo el camino
+Mecanismos de correccion
+Cuanto mide la cabecera minima de IP? 20Bytes
+PAYLOAD: Carga real detras de un protocolo
+Como uso bien los protocolos de red para hacer un buen uso de los mismos?
+Protocolo de comunicacion entre 2 equipos.
+Aplicacion que se comporte mal? leo un byte, escribo y asi
+Que se comporte bien?
+Socket: General, datagrama
+Total length: minimo 2 ya que es el tamaño de la cabecera
+Datagrama IP HASTA 64K menos la cabecera
+MF: More fragments
+DF: Don't fragment, manera imperativa que la maquina de origen deniega la fragmentacion  
+ICMP, protocolo de control, reporte de errores, toma acciones quien recibe ese feedback. No corrige errores
+Redes virtuales: Sw, routers etc
+Despliegue de clouds 
+TTL cantidad e hops/nafta. por poner un extremo tipico: 20 saltos
+mtr destino
+TTL evita LOOPS, herramientas de diagnostico
+ARP
+El que tiene la mac puede responder directo, porque cuando pregunto, yo doy mi mac, y el destino usa la mac de quien pregunta para enviar un unicast
+Es un dolor de cabeza implementar fragmentacion
+Fragmentacion:
+
+
+Protocolos de transporte TCP/IP
+
+UMCloud
+CapEx y OpEx 
+Self Service --» sistema que estoy buscando
+ICPM control y confirmacion
+ssh -i direccion -v ubuntu@10.201.2.101
+
+
+IPV6
+Es igual a IPV4 en cuanto a semantica, features, es entre nodos, es como un ipv4 ccon el campo address a 128bits
+IOT: Mas cosas que personas conectadas a internet
+NAT: Trampa en el protocolo
+El punto mas importante es el end to end
+DHCP manejaba estados, leasing de ips del dhcp server, prestamo temporal. Statefull. tengo que almacenar en memoria
+Con tantos bits en ipv6 permite cambiar a un enfoque stateless
+Scope_ Alcance de una direccion IP. Concepto mas fuerte de linklocal
+Dest_ Tipo de destino: unicast, tipo mas comun de direccion, multicast, es un camino intermedio entre unicast y broadcast. mediante trucos pueden participar un grupo, que envio un solo paquete y les llega a varios. IPV6 MATA al broadcast
+IPV6 se saca de encima el broadcast. La unica manera es el multicast
+Anycast es un caso particula de unicast:
+Cual es la primer pregunta que se hace una maquina: Es esta ip destino alguna de las mias?
+Anycast: IP que por magia del routing es unica en distintos lugares del mundo, pero el routing hace que sea coherente ese servicio
+Unicast:Unico destino
+Dual stack, soporta tanto ipv4 como ipv6. Leo losprimeros 4 bits
+IPV4: primeros 4: 0100 Problema de ipv4
+TPV6 primeros 4 : 0110 problema de ipv6
+Otra cosa: Lo descarto:
+IPV6: Chau fragmentacion
+El checksum: es eliminado, protegia la cabecera de IPV4
+IPV6 piensa en su carga como un todo,, ttl pasa a ser el hop limit, lo que realmente es
+Next header: Carga el protocolo de transporte u otro tipo de comportamiento
+Flow label: Ver videos. No es conexion full. Permite identificar el datagrama a que flujo corresponde en el camino de origen destino. Permite priorizar el trafico
+Ver ICMPV6
+Los primeros 4 son iguales
+Scope host, es solo valido dentro del mismo host, no sale
+Scope link: Solo es valida en el primer router, no es routeable. El prefijo fe80 esta reservado para scope link. No puede rutearse, siempre muere en el enlacem para eso fueron diseñadas.
+fe80 prefijo por defecto. Con la direccion MAC (48 bit) puedo armar una direccion de scope link en ipv4. Autoconfiguracion /64 . En ipv6 Todas las direcciones de red son /64. Red de enlace /64. En una capa de enlace puedo tener 2⁶⁴ host.
+Como se administran los prefijos ipv6:
+	Los ultimos 64 bits derivan de la mac
+	Los primeros 64 los publica un router
+IPV6 publicas empiezan en 2 o 3
+nginx servidor web mas liviano que hay
+
+UMCloud
+CapEx y OpEx
+Self Service --» sistema que estoy buscando
+ICPM control y confirmacion
+ssh -i direccion -v ubuntu@10.201.2.101
+Ip origen - ip destino
+Puerto origen - puerto destino
+El puerto origen sirve para recibir una respuesta
+5Upla de la capa de transporte
+Las paginas abren multiples conexiones para paralelizar las descargas
+Las replicas no mantienen estados, no memorizan nada
+Estados: memoria, almacenamiento etc
+split brain: multiverso. Problemas de inconsistencia
+Consistent hashing . Distintos servidores se hacen cargo del cloud
+Floating ip. Ips flotantes
+A la bd solo se deben conectar a la webapp desde el 3306
+Se crea un grupo de seguridad por cada tipo de instancia
+Hasta aca fue Cloud Classic -
+
+--Cloud Native--
+Automatizacion
+Herramienta mas usada de automatizacion --> Terraform
+El despliegue de la infranestructura, y de una App completa se programa
+Serverless -- La cloud ya incluye el Runtime, el runtime se provee como servicio
+Conteiners con el runtime dentro de la app
+Declarativo: Receta con el resultado final que quiero
+El container arranca con la configuracion provista desde afuera. los logs emitidos por el conteiner deben salir del contenedor.
+Conteiner runtime interface: Memoria, cpu, etc
+Conteiner network interface: Redes, routers etc
+Conteiner storage interface: Volumenes
+dig "URL"
+Kubernetes: Escribir el codigo que despliega los programas
